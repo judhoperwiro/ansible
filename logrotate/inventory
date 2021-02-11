@@ -1,0 +1,10 @@
+###############LOGROTATE###################
+
+[logrotate]
+hostname-machine-01
+hostname-machine-02
+
+[logrotate:vars]
+ansible_user=redhat
+ansible_ssh_pass=redhat
+ansible_sudo_pass=redhat

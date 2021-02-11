@@ -1,0 +1,161 @@
+
+- hosts: logrotate
+  remote_user: redhat
+  become: true
+  tasks:
+    - name: 01. Create Logrotate Configuration File
+      file:
+        path: /etc/logrotate.d/kubernetes
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+      tags: kubernetes-log
+
+    - name: 02. Insert Configuration File
+      blockinfile:
+        path: /etc/logrotate.d/kubernetes
+        block: |
+          /app/platform/kubernetes/logs/*/*.log
+          {
+            su ydbadm ydbadm
+            rotate 90
+            daily
+            missingok
+            dateext
+            copytruncate
+            notifempty
+            compress
+            maxage 2
+          }
+      tags: kubernetes-log
+
+    - name: 03. Run Logrotate
+      shell: logrotate -f /etc/logrotate.d/kubernetes
+      tags: kubernetes-log
+
+    - name: 04. Create Logrotate Configuration File Postgres-exttrs
+      file:
+        path: /etc/logrotate.d/postgresql-exttrs
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+      tags: postgres
+
+    - name: 05. Insert Configuration File
+      blockinfile:
+        path: /etc/logrotate.d/postgresql-exttrs
+        block: |
+          /data/DB/postgresql/exttrs/log/*/*.log
+          {
+            su exttrs dbgrp
+            rotate 168
+            size 10M
+            missingok
+            dateformat -%Y-%m-%d-%s
+            dateext
+            compress
+            notifempty
+          }
+      tags: postgres
+
+    - name: 06. Run Logrotate
+      shell: logrotate -f /etc/logrotate.d/postgresql-exttrs
+      tags: postgres
+
+    - name: 07. Create Logrotate Configuration File Postgres-extraw
+      file:
+        path: /etc/logrotate.d/postgresql-extraw
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+      tags: postgres
+
+    - name: 08. Insert Configuration File
+      blockinfile:
+        path: /etc/logrotate.d/postgresql-extraw
+        block: |
+          /data/DB/postgresql/extraw/log/*/*.log
+          {
+            su extraw dbgrp
+            rotate 168
+            size 10M
+            missingok
+            dateformat -%Y-%m-%d-%s
+            dateext
+            compress
+            notifempty
+          }
+      tags: postgres
+
+    - name: 09. Run Logrotate
+      shell: logrotate -f /etc/logrotate.d/postgresql-extraw
+      tags: postgres
+
+    - name: 10. Create Logrotate Configuration File Postgres-extready
+      file:
+        path: /etc/logrotate.d/postgresql-extready
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+      tags: postgres
+
+    - name: 11. Insert Configuration File
+      blockinfile:
+        path: /etc/logrotate.d/postgresql-extready
+        block: |
+          /data/DB/postgresql/extready/log/*/*.log
+          {
+            su extready dbgrp
+            rotate 168
+            size 10M
+            missingok
+            dateformat -%Y-%m-%d-%s
+            dateext
+            compress
+            notifempty
+          }
+      tags: postgres
+
+    - name: 12. Run Logrotate
+      shell: logrotate -f /etc/logrotate.d/postgresql-extready
+      tags: postgres
+
+    - name: 13. Create Logrotate Configuration File Postgres-extrcn
+      file:
+        path: /etc/logrotate.d/postgresql-extrcn
+        owner: root
+        group: root
+        mode: 0644
+        state: touch
+      tags: postgres
+
+    - name: 14. Insert Configuration File
+      blockinfile:
+        path: /etc/logrotate.d/postgresql-extrcn
+        block: |
+          /data/DB/postgresql/extrcn/log/*/*.log
+          {
+            su extrcn dbgrp
+            rotate 168
+            size 10M
+            missingok
+            dateformat -%Y-%m-%d-%s
+            dateext
+            compress
+            notifempty
+          }
+      tags: postgres
+
+    - name: 15. Run Logrotate
+      shell: logrotate -f /etc/logrotate.d/postgresql-extrcn
+      tags: postgres
+
+    - name: xx. Delete Logrotate Configuration File
+      file:
+        path: /etc/logrotate.d/xxx
+        state: absent
+      tags: delete

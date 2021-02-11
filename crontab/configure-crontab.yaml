@@ -1,0 +1,12 @@
+- hosts: crontab
+  remote_user: redhat
+  become: true
+  tasks:
+    - name: 01. Create Crontab Configuration File
+      cron:
+        name: docker image prune --all every sunday at 00.00
+        minute: 0
+        hour: 0
+        weekday: sun
+        job: /usr/bin/docker image prune --all -f
+        state: present

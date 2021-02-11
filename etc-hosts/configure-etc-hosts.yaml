@@ -1,0 +1,13 @@
+- hosts: all
+  remote_user: redhat
+  tasks:
+    - name: Insert or Update /etc/hosts configuration
+      blockinfile:
+        path: /etc/hosts
+        block: |
+          10.0.0.1 hostname-machine-01 hostname-machine-01.dlending.local
+          10.0.0.2 hostname-machine-01 hostname-machine-02.dlending.local
+          10.0.0.3 hostname-machine-01 hostname-machine-03.dlending.local
+          10.0.0.4 hostname-machine-01 hostname-machine-04.dlending.local
+          10.0.0.5 hostname-machine-01 hostname-machine-05.dlending.local
+  become: true

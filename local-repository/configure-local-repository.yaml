@@ -1,0 +1,10 @@
+---
+- hosts: all
+  remote_user: redhat
+  become: true
+  tasks:
+  - name: 01. Setup Local Repository
+    lineinfile:
+      path: /etc/yum.repos.d/local.repo
+      regexp: '^baseurl ='
+      line: baseurl = http://10.0.0.1/repo

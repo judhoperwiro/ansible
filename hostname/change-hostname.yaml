@@ -1,0 +1,8 @@
+---
+- hosts: all
+  remote_user: redhat
+  become: true
+  tasks:
+  - name: 01. Update Hostname
+    hostname:
+      name: "{{ new_hostname }}"

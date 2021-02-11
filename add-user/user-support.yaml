@@ -1,0 +1,18 @@
+---
+- hosts: all
+  remote_user: redhat
+  become: true
+  tasks:
+    - name: Create a login user
+      user:
+        name: support
+        password: "{{ 'support' | password_hash('sha512') }}"
+        uid: 1110
+        state: present
+        shell: /bin/bash
+        system: no
+        createhome: yes
+        home: /home/support
+
+    - name: set users password valid time
+      shell: chage -I -1 -m 0 -M 99999 -E -1 support

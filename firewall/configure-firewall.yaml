@@ -1,0 +1,36 @@
+- hosts: firewall
+  remote_user: redhat
+  become: true
+  tasks:
+    - name: Add port to firewalld
+      firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        state: enabled
+      with_items:
+        - 9300/tcp
+        - 2181/tcp
+        - 9200/tcp
+      tags: add
+
+    - name: reload service firewalld
+      systemd:
+        name: firewalld
+        state: reloaded
+      tags: add
+
+    - name: delete port to firewalld
+      firewalld:
+        port: "{{ item }}"
+        permanent: yes
+        state: absent
+      with_items:
+        - 9092/tcp
+        - 9200/tcp
+      tags: delete
+
+    - name: reload service firewalld
+      systemd:
+        name: firewalld
+        state: reloaded
+      tags: delete
